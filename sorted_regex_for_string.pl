@@ -42,7 +42,7 @@ while (my $file = readdir($dh)) {
 closedir($dh);
 
 # open file for printing results
-open (my $output_fh, ">", "/Users/daniel/Code/teppei-project/results_sorted.csv");
+open (my $output_fh, ">", "/Users/daniel/Code/teppei-project/results/results_sorted.csv");
 
 # print csv headers
 print $output_fh "filename,number of times 参加 appears in the file\n";

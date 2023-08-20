@@ -10,7 +10,7 @@ use List::Util qw(
 my $data_dir = "/Users/daniel/Code/teppei-project/data";
 my $str_to_match = "参加";
 
-open (my $output_fh, ">", "/Users/daniel/Code/teppei-project/results.csv");
+open (my $output_fh, ">", "/Users/daniel/Code/teppei-project/results/results.csv");
 print $output_fh "filename,number of times 参加 appears in the file\n";
 
 # read through all the data files, process for appearances of $str_to_match

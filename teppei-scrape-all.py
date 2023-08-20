@@ -25,7 +25,7 @@ for year_anchor in year_link_anchors:
   box = year_page_soup.find_all("div", "box")
   box_a = str(box[0].find_all("a")[0])
 
-  reg = year_number + "/" + "\d\d"
+  reg = year_number + "/" + "[\d]+"
   month = re.findall(reg, box_a)[0].split("/")[1]
 
   year_month_page_url = year_page_url + "/" + month

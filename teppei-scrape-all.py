@@ -13,7 +13,6 @@ year_links = soup.find_all("ul", "link-list")
 year_link_anchors = year_links[0].find_all("a")
 
 # grab the page at the first year link anchor to develop
-# later, we will do all years in a for loop
 for year_anchor in year_link_anchors:
   text = year_anchor.text
   year_number = text[0:4]
@@ -22,39 +21,45 @@ for year_anchor in year_link_anchors:
   year_page = urllib.request.urlopen(year_page_url)
   year_page_soup = BeautifulSoup(year_page, "lxml")
 
-  box = year_page_soup.find_all("div", "box")
-  box_a = str(box[0].find_all("a")[0])
+  boxes = year_page_soup.find_all("div", "box")
 
-  reg = year_number + "/" + "[\d]+"
-  month = re.findall(reg, box_a)[0].split("/")[1]
+  for box in boxes:
+    box_a = str(box.find_all("a"))
 
-  year_month_page_url = year_page_url + "/" + month
+    # skip an empty box
+    if (box_a == "[]"):
+      continue;
 
-  year_month_page = urllib.request.urlopen(year_month_page_url)
-  year_month_page_soup = BeautifulSoup(year_month_page, "lxml")
+    reg = year_number + "/" + "[\d]+"
+    month = re.findall(reg, box_a)[0].split("/")[1]
 
-  # each page contains a list of links to districts
-  district_links = year_month_page_soup.find_all("ul", class_="link-list")
+    year_month_page_url = year_page_url + "/" + month
 
-  for districts in district_links:
-    districts_a = districts.find_all("a")
+    year_month_page = urllib.request.urlopen(year_month_page_url)
+    year_month_page_soup = BeautifulSoup(year_month_page, "lxml")
 
-    for district_link_a in districts_a:
-      district_link_a_str = str(district_link_a)
+    # each page contains a list of links to districts
+    district_links = year_month_page_soup.find_all("ul", class_="link-list")
 
-      district_link_parts = district_link_a_str.split("href=")[1].split(">")[0].split("/")
-      district_link_final_3_parts = "/".join(district_link_parts[6:8])
+    for districts in district_links:
+      districts_a = districts.find_all("a")
 
-      district_url_trailing_quote = year_month_page_url + "/" + district_link_final_3_parts
-      district_url = district_url_trailing_quote[:-1]
+      for district_link_a in districts_a:
+        district_link_a_str = str(district_link_a)
 
-      district_page = urllib.request.urlopen(district_url)
-      district_soup = BeautifulSoup(district_page, "lxml")
+        district_link_parts = district_link_a_str.split("href=")[1].split(">")[0].split("/")
+        district_link_final_3_parts = "/".join(district_link_parts[6:8])
 
-      contents = district_soup.find_all("section", class_="mb-6")[0]
+        district_url_trailing_quote = year_month_page_url + "/" + district_link_final_3_parts
+        district_url = district_url_trailing_quote[:-1]
 
-      file_name = "/Users/daniel/Code/teppei-project/" + district_url[8:].replace("/", "_");
+        district_page = urllib.request.urlopen(district_url)
+        district_soup = BeautifulSoup(district_page, "lxml")
 
-      f = open(file_name , "w")
-      f.write(str(contents))
+        contents = district_soup.find_all("section", class_="mb-6")[0]
+
+        file_name = "/Users/daniel/Code/teppei-project/" + district_url[8:].replace("/", "_");
+
+        f = open(file_name , "w")
+        f.write(str(contents))
 

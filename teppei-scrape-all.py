@@ -38,7 +38,8 @@ for year_anchor in year_link_anchors:
     year_month_page = urllib.request.urlopen(year_month_page_url)
     year_month_page_soup = BeautifulSoup(year_month_page, "lxml")
 
-    # each page contains a list of links to districts
+    # each page contains a list of links to districts, and other categories,
+    # all in sections with a class of "link-list"
     district_links = year_month_page_soup.find_all("ul", class_="link-list")
 
     for districts in district_links:
